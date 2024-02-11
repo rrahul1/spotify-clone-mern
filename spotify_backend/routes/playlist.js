@@ -78,14 +78,14 @@ router.post(
 
       // checking if the currentUser owns the playlist or is a collaborator
       if (
-         playlist.owner != currentUser._id &&
+         !playlist.owner.equals(currentUser._id) &&
          !playlist.collaborators.includes(currentUser._id)
       ) {
          return res.status(400).json({ error: "Not Allowed!" });
       }
 
       // checking if song is valid
-      const song = await Song.findOne()({ _id: songId });
+      const song = await Song.findOne({ _id: songId });
       if (!song) {
          return res.status(304).json({ error: "Song doesn't exist" });
       }
