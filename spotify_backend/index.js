@@ -8,6 +8,7 @@ const passport = require("passport");
 const User = require("./models/User");
 const authRoutes = require("./routes/auth");
 const songRoutes = require("./routes/song");
+const playlistRoutes = require("./routes/playlist");
 
 // converting req-body to json
 app.use(express.json());
@@ -54,6 +55,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/song", songRoutes);
+app.use("/playlist", playlistRoutes);
 
 app.listen(5000, () => {
    console.log("app listening on port 5000");
