@@ -1,11 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import spotifyIcon from "@iconify-icons/logos/spotify";
 import TextInput from "./shared-components/TextInput";
 import PasswordInput from "./shared-components/PasswordInput";
 import { Link } from "react-router-dom";
+import { unauthenticatedPostRequest } from "../utils/serverHelpers";
 
 const SignUpComponent = () => {
+   const [email, setEmail] = useState("");
+   const [confirmEmail, setConfirmEmail] = useState("");
+   const [username, setUsername] = useState("");
+   const [password, setPassword] = useState("");
+   const [firstName, setFirstName] = useState("");
+   const [lastName, setLastName] = useState("");
+
+   const resetForm = () => {
+      setEmail("");
+      setConfirmEmail("");
+      setUsername("");
+      setPassword("");
+      setFirstName("");
+      setLastName("");
+   };
+
+   const signUp = async (e) => {
+      e.preventDefault();
+
+      if (
+         !email ||
+         !confirmEmail ||
+         !password ||
+         !username ||
+         !firstName ||
+         !lastName
+      ) {
+         alert("All fields are required. Please fill in all fields!");
+         return;
+      }
+
+      if (email !== confirmEmail) {
+         alert("Email and confirm email do not match. Please check again!");
+         return;
+      }
+
+      try {
+         const data = {
+            email,
+            password,
+            username,
+            firstname: firstName,
+            lastname: lastName,
+         };
+         const response = await unauthenticatedPostRequest(
+            "/auth/register",
+            data
+         );
+         if (response) {
+            console.log("Sign-up successful:", response);
+            resetForm();
+         } else {
+            console.error(
+               "Sign-up failed:",
+               response?.error || "Unknown error occurred"
+            );
+         }
+      } catch (error) {
+         console.error("Sign-up failed:", error.message);
+      }
+   };
+
    return (
       <div className="size-full flex flex-col items-center">
          <div className="logo p-6 border-b border-solid border-gray-300 w-full flex justify-center">
@@ -17,25 +80,53 @@ const SignUpComponent = () => {
             </div>
             <TextInput
                label="Enter your email"
-               placeholder="Email address or username"
+               placeholder="Enter your Email address"
                className="mb-6"
+               value={email}
+               setValue={setEmail}
             />
             <TextInput
                label="Confirm Email"
-               placeholder="Enter your email again"
+               placeholder="Enter your email again to confirm"
                className="mb-6"
+               value={confirmEmail}
+               setValue={setConfirmEmail}
+            />
+            <TextInput
+               label="Username"
+               placeholder="Enter your Username"
+               className="mb-6"
+               value={username}
+               setValue={setUsername}
             />
             <PasswordInput
                label="Create a password"
                placeholder="Create a strong password"
+               value={password}
+               setValue={setPassword}
             />
-            <TextInput
-               label="What should we call you?"
-               placeholder="Enter your profile name"
-               className="my-6"
-            />
+            <div className="w-full flex justify-between items-center space-x-8">
+               <TextInput
+                  label="First Name"
+                  placeholder="Enter your First name"
+                  className="my-6"
+                  value={firstName}
+                  setValue={setFirstName}
+               />
+               <TextInput
+                  label="Last Name"
+                  placeholder="Enter your Last name"
+                  className="my-6"
+                  value={lastName}
+                  setValue={setLastName}
+               />
+            </div>
+
             <div className=" w-full flex items-center justify-center my-8">
-               <button className="bg-green-400 font-semibold p-3 px-8 rounded-full">
+               <button
+                  className="bg-green-400 font-semibold p-3 px-8 rounded-full"
+                  onClick={signUp}
+               >
                   SIGN UP
                </button>
             </div>

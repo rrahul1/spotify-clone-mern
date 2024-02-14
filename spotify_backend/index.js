@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const app = express();
 require("dotenv").config();
 const JwtStrategy = require("passport-jwt").Strategy,
@@ -12,6 +13,7 @@ const playlistRoutes = require("./routes/playlist");
 
 // converting req-body to json
 app.use(express.json());
+app.use(cors());
 
 //    Mongoose connection setup
 mongoose
@@ -19,7 +21,7 @@ mongoose
       `mongodb+srv://rrahul1:${process.env.MONGO_PASSWORD}@cluster0.nijccyw.mongodb.net/?retryWrites=true&w=majority`
    )
    .then((x) => console.log("Connection Sucessful"))
-   .catch((err) => console.log("Error while connecting to mongo"));
+   .catch((err) => console.log(err));
 
 // passport-jwt setup
 let opts = {};
