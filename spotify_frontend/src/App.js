@@ -4,9 +4,10 @@ import LoginComponent from "./components/LoginComponent";
 import SignUpComponent from "./components/SignUpComponent";
 import HomeComponent from "./components/HomeComponent";
 import { useCookies } from "react-cookie";
+import UploadSong from "./components/UploadSong";
 
 function App() {
-   const [cookie, setCookie] = useCookies(["token"]);
+   const [cookie] = useCookies(["token"]);
    return (
       <div className="h-screen w-screen font-poppins">
          <BrowserRouter>
@@ -17,6 +18,7 @@ function App() {
                      element={<h1 className="bg-red-500">Hello</h1>}
                   />
                   <Route path="/home" element={<HomeComponent />} />
+                  <Route path="/uploadsongs" element={<UploadSong />} />
                   <Route path="*" element={<Navigate to="/home" />} />
                </Routes>
             ) : (

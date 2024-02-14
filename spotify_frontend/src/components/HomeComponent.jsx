@@ -1,12 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 import spotifyLogo from "../assets/spotify_logo_white.svg";
 import IconText from "./shared-components/IconText";
 import NavButton from "./shared-components/NavButton";
 import { PlaylistCard } from "./shared-components/PlaylistCard";
+import { backendUrl } from "../utils/config";
+import { useCookies } from "react-cookie";
 
 const HomeComponent = () => {
+   const [cookie] = useCookies(["token"]);
+   const [data, setData] = useState(null);
+
+   const token = cookie.token;
+
+   useEffect(() => {
+      axios
+         .get(`${backendUrl}/auth/userdetail/${token}`)
+         .then((res) => setData(res.data))
+         .catch((error) => {
+            console.log(error);
+         });
+   }, [token]);
+
    const imgUrl =
       "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg";
 
@@ -76,7 +93,11 @@ const HomeComponent = () => {
                   <div className="w-2/5  h-full flex items-center justify-around">
                      <NavButton displayText={"Sign Up"} />
                      <div className="logInBtn cursor-pointer h-2/3 px-8 bg-white font-semibold rounded-full flex items-center justify-center">
-                        <Link to="/login">Log In</Link>
+                        {data && data ? (
+                           data?.username
+                        ) : (
+                           <Link to="/login">Log In</Link>
+                        )}
                      </div>
                   </div>
                </div>

@@ -11,7 +11,7 @@ const LoginComponent = () => {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
 
-   const [cookie, setCookie] = useCookies(["token"]);
+   const [setCookie] = useCookies(["token"]);
 
    const navigate = useNavigate();
 
@@ -43,7 +43,7 @@ const LoginComponent = () => {
             navigate("/home");
          } else {
             console.error(
-               "Sign-up failed:",
+               "Sign-in failed:",
                response?.error || "Unknown error occurred"
             );
          }

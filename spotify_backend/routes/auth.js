@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { getToken } = require("../utils/helpers");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 // registering new user
 
@@ -64,6 +66,26 @@ router.post("/login", async (req, res) => {
    const userReturn = { ...user.toJSON(), token };
    delete userReturn.password;
    return res.status(200).json(userReturn);
+});
+
+// get user details
+
+router.get("/userdetail/:token", async (req, res) => {
+   let token = req.params.token;
+   const id = jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+      if (err) {
+         console.error("Error decoding token:", err.message);
+         return;
+      }
+
+      return decoded.identifier;
+   });
+
+   const user = await User.findOne({ _id: id });
+   if (!user) {
+      return res.status(403).json({ error: "User doesn't exist" });
+   }
+   return res.status(200).json(user);
 });
 
 module.exports = router;
