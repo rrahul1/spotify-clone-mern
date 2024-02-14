@@ -26,7 +26,7 @@ const SignUpComponent = () => {
       setLastName("");
    };
 
-   const signUp = async (e) => {
+   const handleSignUp = async (e) => {
       e.preventDefault();
 
       if (
@@ -132,7 +132,7 @@ const SignUpComponent = () => {
             <div className=" w-full flex items-center justify-center my-8">
                <button
                   className="bg-green-400 font-semibold p-3 px-8 rounded-full"
-                  onClick={signUp}
+                  onClick={handleSignUp}
                >
                   SIGN UP
                </button>
