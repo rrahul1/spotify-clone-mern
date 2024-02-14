@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { useCookies } from "react-cookie";
 import { Icon } from "@iconify/react";
 import spotifyIcon from "@iconify-icons/logos/spotify";
 import TextInput from "./shared-components/TextInput";
 import PasswordInput from "./shared-components/PasswordInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { unauthenticatedPostRequest } from "../utils/serverHelpers";
 
 const SignUpComponent = () => {
@@ -13,6 +14,8 @@ const SignUpComponent = () => {
    const [password, setPassword] = useState("");
    const [firstName, setFirstName] = useState("");
    const [lastName, setLastName] = useState("");
+   const [cookie, setCookie] = useCookies(["token"]);
+   const navigate = useNavigate();
 
    const resetForm = () => {
       setEmail("");
@@ -56,8 +59,12 @@ const SignUpComponent = () => {
             data
          );
          if (response) {
-            console.log("Sign-up successful:", response);
+            const token = response.token;
+            const date = new Date();
+            date.setDate(date.getDate() + 15);
+            setCookie("token", token, { path: "/", expires: date });
             resetForm();
+            navigate("/home");
          } else {
             console.error(
                "Sign-up failed:",
