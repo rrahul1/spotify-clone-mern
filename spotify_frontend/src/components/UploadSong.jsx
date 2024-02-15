@@ -5,6 +5,7 @@ import spotifyLogo from "../assets/spotify_logo_white.svg";
 import IconText from "./shared-components/IconText";
 import NavButton from "./shared-components/NavButton";
 import TextInput from "./shared-components/TextInput";
+import CloudinaryUpload from "./shared-components/CloudinaryUpload";
 
 const UploadSong = () => {
    return (
@@ -77,6 +78,9 @@ const UploadSong = () => {
                   <div className="w-1/2 text-white">
                      <TextInput label="Thumbnail" placeholder="Thumbnail" />
                   </div>
+               </div>
+               <div className="pt-5">
+                  <CloudinaryUpload />
                </div>
             </div>
          </div>
