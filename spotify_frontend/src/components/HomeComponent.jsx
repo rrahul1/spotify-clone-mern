@@ -91,7 +91,14 @@ const HomeComponent = () => {
                      <div className="h-1/2 border border-white"></div>
                   </div>
                   <div className="w-2/5  h-full flex items-center justify-around">
-                     <NavButton displayText={"Sign Up"} />
+                     {data && data ? (
+                        <div className="text-gray-300">
+                           <Link to="/uploadsongs">Upload Song</Link>
+                        </div>
+                     ) : (
+                        <NavButton displayText={"Sign Up"} />
+                     )}
+
                      <div className="logInBtn cursor-pointer h-2/3 px-8 bg-white font-semibold rounded-full flex items-center justify-center">
                         {data && data ? (
                            data?.username
