@@ -4,23 +4,31 @@ import LoginComponent from "./components/LoginComponent";
 import SignUpComponent from "./components/SignUpComponent";
 import HomeComponent from "./components/HomeComponent";
 import { useCookies } from "react-cookie";
-import UploadSong from "./components/UploadSong";
+import UploadSong from "./components/pages/UploadSong";
+import MyMusic from "./components/MyMusic";
+import songContext from "./context/songContext";
+import { useState } from "react";
 
 function App() {
    const [cookie] = useCookies(["token"]);
+   const [currentSong, setCurrentSong] = useState(null);
+
    return (
       <div className="h-screen w-screen font-poppins">
          <BrowserRouter>
             {cookie.token ? (
-               <Routes>
-                  <Route
-                     path="/"
-                     element={<h1 className="bg-red-500">Hello</h1>}
-                  />
-                  <Route path="/home" element={<HomeComponent />} />
-                  <Route path="/uploadsongs" element={<UploadSong />} />
-                  <Route path="*" element={<Navigate to="/home" />} />
-               </Routes>
+               <songContext.Provider value={{ currentSong, setCurrentSong }}>
+                  <Routes>
+                     <Route
+                        path="/"
+                        element={<h1 className="bg-red-500">Hello</h1>}
+                     />
+                     <Route path="/home" element={<HomeComponent />} />
+                     {/* <Route path="/uploadsongs" element={<UploadSong />} /> */}
+                     {/* <Route path="/mymusic" element={<MyMusic />} /> */}
+                     <Route path="*" element={<Navigate to="/home" />} />
+                  </Routes>
+               </songContext.Provider>
             ) : (
                <Routes>
                   <Route path="/login" element={<LoginComponent />} />

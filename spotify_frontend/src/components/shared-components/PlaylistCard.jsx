@@ -1,16 +1,42 @@
 import React from "react";
 
-export const PlaylistCard = ({ titleText, title, description, imgUrl }) => {
+export const PlaylistCard = ({ songStaticData }) => {
    return (
       <div className="text-white mt-8">
-         <div className="text-2xl font-semibold mb-5">{titleText}</div>
-         <div className="w-full flex justify-between  space-x-5 ">
-            <Card title={title} description={description} imgUrl={imgUrl} />
-            <Card title={title} description={description} imgUrl={imgUrl} />
-            <Card title={title} description={description} imgUrl={imgUrl} />
-            <Card title={title} description={description} imgUrl={imgUrl} />
-            <Card title={title} description={description} imgUrl={imgUrl} />
-         </div>
+         {songStaticData.map((song, i) => (
+            <div key={i}>
+               <div className="text-2xl font-semibold mb-5">
+                  {song.titleText}
+               </div>
+               <div className="w-full flex justify-between  space-x-5 ">
+                  <Card
+                     title={song.title}
+                     description={song.description}
+                     imgUrl={song.imgUrl}
+                  />
+                  <Card
+                     title={song.title}
+                     description={song.description}
+                     imgUrl={song.imgUrl}
+                  />
+                  <Card
+                     title={song.title}
+                     description={song.description}
+                     imgUrl={song.imgUrl}
+                  />
+                  <Card
+                     title={song.title}
+                     description={song.description}
+                     imgUrl={song.imgUrl}
+                  />
+                  <Card
+                     title={song.title}
+                     description={song.description}
+                     imgUrl={song.imgUrl}
+                  />
+               </div>
+            </div>
+         ))}
       </div>
    );
 };

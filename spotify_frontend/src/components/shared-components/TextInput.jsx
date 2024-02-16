@@ -5,7 +5,7 @@ function TextInput({ label, placeholder, className, value, setValue }) {
       <div
          className={`textInputDiv flex flex-col space-y-4 w-full ${className}`}
       >
-         <label htmlFor={label} className="font-semibold">
+         <label htmlFor={label} className="font-semibold text-white">
             {label}
          </label>
          <input

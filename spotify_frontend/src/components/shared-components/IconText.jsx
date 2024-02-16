@@ -1,9 +1,21 @@
 import React from "react";
 import { Icon } from "@iconify/react";
+import { Link } from "react-router-dom";
 
-const IconText = ({ iconName, displayText, active }) => {
+const IconText = ({ iconName, displayText, to, active, handleNavClick }) => {
+   const handleClick = (event) => {
+      event.preventDefault(); // Prevents the default navigation behavior
+
+      handleNavClick(to); // Update the activeComponent state
+   };
    return (
-      <div className="flex items-center justify-start cursor-pointer">
+      <Link
+         to={to}
+         onClick={handleClick}
+         className={`nav-item ${
+            active ? "active" : ""
+         } flex items-center justify-start cursor-pointer`}
+      >
          <div className="px-5 py-2 ">
             <Icon
                icon={iconName}
@@ -18,7 +30,7 @@ const IconText = ({ iconName, displayText, active }) => {
          >
             {displayText}
          </div>
-      </div>
+      </Link>
    );
 };
 
