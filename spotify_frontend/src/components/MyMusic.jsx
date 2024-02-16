@@ -7,13 +7,13 @@ const MyMusic = () => {
    const [songData, setSongData] = useState([]);
    const [play, setPlay] = useState(null);
 
-   const playMusic = (src) => {
+   const playMusic = (songSrc) => {
       if (play) {
          play.stop();
          return;
       }
       let music = new Howl({
-         src: [src],
+         src: [songSrc],
          html5: true,
       });
 

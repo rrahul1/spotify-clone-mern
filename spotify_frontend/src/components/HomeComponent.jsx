@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Howl, Howler } from "howler";
 import axios from "axios";
 import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
@@ -16,6 +17,39 @@ const HomeComponent = () => {
    const [data, setData] = useState(null);
    const token = cookie.token;
    const [activeComponent, setActiveComponent] = useState("HomeBody");
+   const [play, setPlay] = useState(null);
+   const [isPaused, setisPaused] = useState(null);
+
+   const playMusic = (songSrc) => {
+      if (play) {
+         play.stop();
+      }
+      let music = new Howl({
+         src: [songSrc],
+         html5: true,
+      });
+
+      setPlay(music);
+      music.play();
+   };
+
+   const pauseMusic = () => {
+      if (play) {
+         play.pause();
+      }
+   };
+
+   const togglePlayPause = () => {
+      if (isPaused) {
+         playMusic(
+            "https://res.cloudinary.com/dgghp0x54/video/upload/v1708095887/n6r7vqxry7petcmbddwl.mp3"
+         );
+         setisPaused(false);
+      } else {
+         pauseMusic();
+         setisPaused(true);
+      }
+   };
 
    const handleNavClick = (componentName) => {
       setActiveComponent(componentName);
@@ -150,13 +184,13 @@ const HomeComponent = () => {
             </div>
          </div>
          <div className="w-full h-1/10 bg-black opacity-40 flex items-center p-4 text-white">
-            <div className="w-1/4 flex items-center">
+            <div className="w-1/3 flex items-center">
                <img
                   src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
                   alt="song image"
                   className="h-14 w-14 rounded"
                />
-               <div className="px-4">
+               <div className="pl-4">
                   <div className="text-sm hover:underline cursor-pointer">
                      Song name
                   </div>
@@ -165,8 +199,43 @@ const HomeComponent = () => {
                   </div>
                </div>
             </div>
-            <div className="w-1/2 flex justify-center bg-pink-500">control</div>
-            <div className="w-1/4 flex justify-end ">last</div>
+            <div className="w-1/2 flex flex-col justify-center items-center h-full">
+               <div className="flex w-1/3 justify-between items-center">
+                  {/* controls for the playing song go here */}
+                  <Icon
+                     icon="ph:shuffle-fill"
+                     fontSize={30}
+                     className="cursor-pointer text-gray-500 hover:text-white"
+                  />
+                  <Icon
+                     icon="mdi:skip-previous-outline"
+                     fontSize={30}
+                     className="cursor-pointer text-gray-500 hover:text-white"
+                  />
+                  <Icon
+                     icon={
+                        isPaused
+                           ? "ic:baseline-play-circle"
+                           : "ic:baseline-pause-circle"
+                     }
+                     fontSize={50}
+                     className="cursor-pointer text-gray-500 hover:text-white"
+                     onClick={togglePlayPause}
+                  />
+                  <Icon
+                     icon="mdi:skip-next-outline"
+                     fontSize={30}
+                     className="cursor-pointer text-gray-500 hover:text-white"
+                  />
+                  <Icon
+                     icon="ic:twotone-repeat"
+                     fontSize={30}
+                     className="cursor-pointer text-gray-500 hover:text-white"
+                  />
+               </div>
+               {/* <div>Progress bar</div> */}
+            </div>
+            <div className="w-1/3 flex justify-end ">last</div>
          </div>
       </div>
    );
