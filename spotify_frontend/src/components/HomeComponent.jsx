@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Howl, Howler } from "howler";
 import axios from "axios";
 import { Icon } from "@iconify/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import spotifyLogo from "../assets/spotify_logo_white.svg";
 import IconText from "./shared-components/IconText";
 import NavButton from "./shared-components/NavButton";
@@ -16,7 +16,9 @@ const HomeComponent = () => {
    const [cookie] = useCookies(["token"]);
    const [data, setData] = useState(null);
    const token = cookie.token;
-   const [activeComponent, setActiveComponent] = useState("HomeBody");
+   const { activeComponent } = useParams();
+   const navigate = useNavigate();
+
    const [play, setPlay] = useState(null);
    const [isPaused, setisPaused] = useState(null);
 
@@ -52,7 +54,7 @@ const HomeComponent = () => {
    };
 
    const handleNavClick = (componentName) => {
-      setActiveComponent(componentName);
+      navigate(`/${componentName}`);
    };
 
    const handleClick = (componentName) => {
@@ -70,6 +72,17 @@ const HomeComponent = () => {
          });
    }, [token]);
 
+   useEffect(() => {
+      if (!activeComponent) {
+         navigate("/home");
+      }
+   }, [activeComponent, navigate]);
+
+   if (!activeComponent) {
+      return <HomeBody />;
+   }
+
+   // Return the component based on the activeComponent state
    return (
       <div className="size-full bg-app-black">
          <div className="w-full h-9/10 flex">
@@ -82,30 +95,30 @@ const HomeComponent = () => {
                      <IconText
                         iconName="material-symbols:home"
                         displayText="Home "
-                        to="/home"
-                        active={activeComponent === "HomeBody"}
-                        handleNavClick={() => handleNavClick("HomeBody")}
+                        to={"/:home"}
+                        active={activeComponent}
+                        handleNavClick={() => handleNavClick("home")}
                      />
                      <IconText
                         iconName="ic:baseline-search"
                         displayText="Search "
-                        to="/search"
-                        active={activeComponent === "Search"}
-                        handleNavClick={() => handleNavClick("Search")}
+                        to="/:search"
+                        active={activeComponent}
+                        handleNavClick={() => handleNavClick("search")}
                      />
                      <IconText
                         iconName="codicon:library"
                         displayText="Library "
-                        to="/library"
-                        active={activeComponent === "Library"}
-                        handleNavClick={() => handleNavClick("Library")}
+                        to="/:library"
+                        active={activeComponent}
+                        handleNavClick={() => handleNavClick("library")}
                      />
                      <IconText
                         iconName="ic:round-library-music"
                         displayText="My Music "
-                        to="/mymusic"
-                        active={activeComponent === "MyMusic"}
-                        handleNavClick={() => handleNavClick("MyMusic")}
+                        to="/:mymusic"
+                        active={activeComponent}
+                        handleNavClick={() => handleNavClick("mymusic")}
                      />
                   </div>
                   <div className="pt-5">
@@ -151,11 +164,11 @@ const HomeComponent = () => {
                         {data && data ? (
                            <div className="text-gray-300">
                               <Link
-                                 to="/uploadsongs"
+                                 to="/:uploadsongs"
                                  onClick={(e) => {
                                     e.stopPropagation();
                                     e.preventDefault();
-                                    handleClick("UploadSong");
+                                    handleClick("uploadsongs");
                                  }}
                               >
                                  Upload Song
@@ -177,9 +190,10 @@ const HomeComponent = () => {
                </div>
 
                <div className="playlistDiv p-8  pt-0 overflow-auto">
-                  {activeComponent === "HomeBody" && <HomeBody />}
-                  {activeComponent === "UploadSong" && <UploadSong />}
-                  {activeComponent === "MyMusic" && <MyMusic />}
+                  {/* Render the component based on the activeComponent state */}
+                  {activeComponent === "home" && <HomeBody />}
+                  {activeComponent === "uploadsongs" && <UploadSong />}
+                  {activeComponent === "mymusic" && <MyMusic />}
                </div>
             </div>
          </div>
@@ -187,7 +201,7 @@ const HomeComponent = () => {
             <div className="w-1/3 flex items-center">
                <img
                   src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
-                  alt="song image"
+                  alt="songthumbnail"
                   className="h-14 w-14 rounded"
                />
                <div className="pl-4">

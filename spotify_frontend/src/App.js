@@ -4,8 +4,6 @@ import LoginComponent from "./components/LoginComponent";
 import SignUpComponent from "./components/SignUpComponent";
 import HomeComponent from "./components/HomeComponent";
 import { useCookies } from "react-cookie";
-import UploadSong from "./components/pages/UploadSong";
-import MyMusic from "./components/MyMusic";
 import songContext from "./context/songContext";
 import { useState } from "react";
 
@@ -19,13 +17,12 @@ function App() {
             {cookie.token ? (
                <songContext.Provider value={{ currentSong, setCurrentSong }}>
                   <Routes>
+                     <Route path="/" element={<HomeComponent />} />
+
                      <Route
-                        path="/"
-                        element={<h1 className="bg-red-500">Hello</h1>}
+                        path="/:activeComponent"
+                        element={<HomeComponent />}
                      />
-                     <Route path="/home" element={<HomeComponent />} />
-                     {/* <Route path="/uploadsongs" element={<UploadSong />} /> */}
-                     {/* <Route path="/mymusic" element={<MyMusic />} /> */}
                      <Route path="*" element={<Navigate to="/home" />} />
                   </Routes>
                </songContext.Provider>
