@@ -16,7 +16,7 @@ const HomeComponent = () => {
    const [cookie] = useCookies(["token"]);
    const [data, setData] = useState(null);
    const token = cookie.token;
-   const { activeComponent } = useParams();
+   let { activeComponent } = useParams();
    const navigate = useNavigate();
 
    const [play, setPlay] = useState(null);
@@ -96,28 +96,28 @@ const HomeComponent = () => {
                         iconName="material-symbols:home"
                         displayText="Home "
                         to={"/:home"}
-                        active={activeComponent}
+                        active={activeComponent === "home"}
                         handleNavClick={() => handleNavClick("home")}
                      />
                      <IconText
                         iconName="ic:baseline-search"
                         displayText="Search "
                         to="/:search"
-                        active={activeComponent}
+                        active={activeComponent === "search"}
                         handleNavClick={() => handleNavClick("search")}
                      />
                      <IconText
                         iconName="codicon:library"
                         displayText="Library "
                         to="/:library"
-                        active={activeComponent}
+                        active={activeComponent === "library"}
                         handleNavClick={() => handleNavClick("library")}
                      />
                      <IconText
                         iconName="ic:round-library-music"
                         displayText="My Music "
                         to="/:mymusic"
-                        active={activeComponent}
+                        active={activeComponent === "mymusic"}
                         handleNavClick={() => handleNavClick("mymusic")}
                      />
                   </div>
@@ -125,6 +125,9 @@ const HomeComponent = () => {
                      <IconText
                         iconName="ic:round-add-box"
                         displayText="Create playlist"
+                        to=":/create-playlist"
+                        active={activeComponent === "create-playlist"}
+                        handleNavClick={() => handleNavClick("create-playlist")}
                      />
                      <IconText
                         iconName="flat-color-icons:like"
