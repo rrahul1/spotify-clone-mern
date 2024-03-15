@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Howl, Howler } from "howler";
 import axios from "axios";
 import { Icon } from "@iconify/react";
@@ -11,6 +11,7 @@ import { useCookies } from "react-cookie";
 import HomeBody from "./pages/HomeBody";
 import UploadSong from "./pages/UploadSong";
 import MyMusic from "./MyMusic";
+import songContext from "../context/songContext";
 
 const HomeComponent = () => {
    const [cookie] = useCookies(["token"]);
@@ -19,15 +20,17 @@ const HomeComponent = () => {
    let { activeComponent } = useParams();
    const navigate = useNavigate();
 
-   const [play, setPlay] = useState(null);
-   const [isPaused, setisPaused] = useState(null);
+   const { currentSong, setCurrentSong } = useContext(songContext);
 
-   const playMusic = (songSrc) => {
+   const [play, setPlay] = useState(null);
+   const [pause, setPasue] = useState(false);
+
+   const playMusic = () => {
       if (play) {
          play.stop();
       }
       let music = new Howl({
-         src: [songSrc],
+         src: [currentSong?.track],
          html5: true,
       });
 
@@ -42,14 +45,12 @@ const HomeComponent = () => {
    };
 
    const togglePlayPause = () => {
-      if (isPaused) {
-         playMusic(
-            "https://res.cloudinary.com/dgghp0x54/video/upload/v1708095887/n6r7vqxry7petcmbddwl.mp3"
-         );
-         setisPaused(false);
-      } else {
+      if (play && play.playing()) {
          pauseMusic();
-         setisPaused(true);
+         setPasue(true);
+      } else {
+         playMusic();
+         setPasue(false);
       }
    };
 
@@ -85,7 +86,7 @@ const HomeComponent = () => {
    // Return the component based on the activeComponent state
    return (
       <div className="size-full bg-app-black">
-         <div className="w-full h-9/10 flex">
+         <div className={`${currentSong ? "h-9/10" : "h-full"} w-full flex`}>
             <div className="h-full w-1/5 bg-black flex flex-col justify-between pb-10">
                <div>
                   <div className="logoDiv p-6 ">
@@ -143,7 +144,7 @@ const HomeComponent = () => {
                            Sign Out
                         </div>
                      ) : (
-                        <div>
+                        <div className="flex items-center">
                            <Icon icon="ph:globe-duotone" />
                            <div className="ml-2 font-semibold text-sm cursor-pointer">
                               English
@@ -200,60 +201,63 @@ const HomeComponent = () => {
                </div>
             </div>
          </div>
-         <div className="w-full h-1/10 bg-black opacity-40 flex items-center p-4 text-white">
-            <div className="w-1/3 flex items-center">
-               <img
-                  src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
-                  alt="songthumbnail"
-                  className="h-14 w-14 rounded"
-               />
-               <div className="pl-4">
-                  <div className="text-sm hover:underline cursor-pointer">
-                     Song name
-                  </div>
-                  <div className="text-xs text-gray-400 hover:underline cursor-pointer">
-                     Singer name
+         {currentSong && (
+            <div className="w-full h-1/10 bg-black opacity-40 flex items-center p-4 text-white">
+               <div className="w-1/3 flex items-center">
+                  <img
+                     src={currentSong?.thumbnail}
+                     alt="songthumbnail"
+                     className="h-14 w-14 rounded"
+                  />
+                  <div className="pl-4">
+                     <div className="text-sm hover:underline cursor-pointer">
+                        {currentSong?.name}
+                     </div>
+                     <div className="text-xs text-gray-400 hover:underline cursor-pointer">
+                        {currentSong.artist.firstname}{" "}
+                        {currentSong.artist.lastname}
+                     </div>
                   </div>
                </div>
-            </div>
-            <div className="w-1/2 flex flex-col justify-center items-center h-full">
-               <div className="flex w-1/3 justify-between items-center">
-                  {/* controls for the playing song go here */}
-                  <Icon
-                     icon="ph:shuffle-fill"
-                     fontSize={30}
-                     className="cursor-pointer text-gray-500 hover:text-white"
-                  />
-                  <Icon
-                     icon="mdi:skip-previous-outline"
-                     fontSize={30}
-                     className="cursor-pointer text-gray-500 hover:text-white"
-                  />
-                  <Icon
-                     icon={
-                        isPaused
-                           ? "ic:baseline-play-circle"
-                           : "ic:baseline-pause-circle"
-                     }
-                     fontSize={50}
-                     className="cursor-pointer text-gray-500 hover:text-white"
-                     onClick={togglePlayPause}
-                  />
-                  <Icon
-                     icon="mdi:skip-next-outline"
-                     fontSize={30}
-                     className="cursor-pointer text-gray-500 hover:text-white"
-                  />
-                  <Icon
-                     icon="ic:twotone-repeat"
-                     fontSize={30}
-                     className="cursor-pointer text-gray-500 hover:text-white"
-                  />
+               <div className="w-1/2 flex flex-col justify-center items-center h-full">
+                  <div className="flex w-1/3 justify-between items-center">
+                     {/* controls for the playing song go here */}
+                     <Icon
+                        icon="ph:shuffle-fill"
+                        fontSize={30}
+                        className="cursor-pointer text-gray-500 hover:text-white"
+                     />
+                     <Icon
+                        icon="mdi:skip-previous-outline"
+                        fontSize={30}
+                        className="cursor-pointer text-gray-500 hover:text-white"
+                     />
+                     <Icon
+                        icon={
+                           pause
+                              ? "ic:baseline-play-circle"
+                              : "ic:baseline-pause-circle"
+                        }
+                        fontSize={50}
+                        className="cursor-pointer text-gray-500 hover:text-white"
+                        onClick={togglePlayPause}
+                     />
+                     <Icon
+                        icon="mdi:skip-next-outline"
+                        fontSize={30}
+                        className="cursor-pointer text-gray-500 hover:text-white"
+                     />
+                     <Icon
+                        icon="ic:twotone-repeat"
+                        fontSize={30}
+                        className="cursor-pointer text-gray-500 hover:text-white"
+                     />
+                  </div>
+                  {/* <div>Progress bar</div> */}
                </div>
-               {/* <div>Progress bar</div> */}
+               <div className="w-1/3 flex justify-end ">last</div>
             </div>
-            <div className="w-1/3 flex justify-end ">last</div>
-         </div>
+         )}
       </div>
    );
 };
